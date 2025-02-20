@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 // import pl.bydgoszcz.technikum.apka1.R
+import androidx.compose.ui.graphics.Color
 
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +44,11 @@ class MainActivity : ComponentActivity() {
     fun SwitchesPrank(modifier: Modifier = Modifier) {
         var switchesState by remember { mutableStateOf(List(5) { false }) }
         var switchCount by remember { mutableIntStateOf(0) }
+        var backgroundColor by remember { mutableStateOf(Color.White) }
+
+        val rainbowColors = listOf(
+            Color.Red, Color(0xFFFFA500), Color.Yellow, Color.Green, Color.Blue, Color(0xFF4B0082), Color(0xFF8A2BE2)
+        )
 
         val message = when (switchCount) {
             in 0..9 -> "turn all on"
@@ -51,7 +58,7 @@ class MainActivity : ComponentActivity() {
             else -> "ARE YOU PLAYING DURING A PROGRAMMING CLASS?????????????????"
         }
 
-        Column(modifier = modifier.padding(16.dp)) {
+        Column(modifier = modifier.padding(16.dp).background(backgroundColor)) {
             Text(text = message, modifier = Modifier.padding(bottom = 16.dp))
             switchesState.forEachIndexed { index, isChecked ->
                 Switch(
@@ -70,6 +77,7 @@ class MainActivity : ComponentActivity() {
                             switchesState = switchesState.toMutableList().apply { this[index] = false }
                             switchCount--
                         }
+                        backgroundColor = rainbowColors[Random.nextInt(rainbowColors.size)]
                     },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary
